@@ -1,27 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── CSS Custom Properties ─────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand colors */
+  --sunshine:   #FFF176;
+  --coral:      #FF6B6B;
+  --mint:       #A8EDCA;
+  --sky:        #BFE3FF;
+  --peach:      #FFD6A5;
+  --offwhite:   #FFFDF7;
+  --plum:       #3D1A78;
+  --mutedgray:  #6B7280;
+
+  /* Fonts */
+  --font-heading: 'Fredoka One', cursive;
+  --font-body:    'DM Sans', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Base Reset ─────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--offwhite);
+    color: var(--plum);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--plum);
+    line-height: 1.2;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Remove default button styles */
+  button {
+    cursor: pointer;
+  }
+
+  /* Focus visible for accessibility */
+  :focus-visible {
+    outline: 3px solid var(--coral);
+    outline-offset: 2px;
+    border-radius: 8px;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Performance Utilities ───────────────────────────────────────────────── */
+@layer utilities {
+  .gpu {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  .card-3d {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
 }
 
+/* ── Component Utilities ─────────────────────────────────────────────────── */
+@layer components {
+
+  /* Heading font shorthand */
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  /* Body font shorthand */
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  /* Soft warm card style */
+  .card-soft {
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 2px 16px 0 rgba(61, 26, 120, 0.08);
+    padding: 1.5rem;
+  }
+
+  /* Hover tilt card — applies on hover */
+  .card-tilt {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card-tilt:hover {
+    transform: rotate(2deg) scale(1.03);
+    box-shadow: 0 8px 32px 0 rgba(61, 26, 120, 0.14);
+  }
+
+  /* Coral CTA button */
+  .btn-coral {
+    background-color: var(--coral);
+    color: white;
+    font-family: var(--font-body);
+    font-weight: 600;
+    border-radius: 9999px;
+    padding: 0.75rem 2rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+  }
+  .btn-coral:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 107, 107, 0.4);
+    background-color: #e84848;
+  }
+  .btn-coral:active {
+    transform: translateY(0);
+  }
+
+  /* Plum outline button */
+  .btn-outline {
+    background-color: transparent;
+    color: var(--plum);
+    font-family: var(--font-body);
+    font-weight: 600;
+    border-radius: 9999px;
+    padding: 0.75rem 2rem;
+    border: 2px solid var(--plum);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .btn-outline:hover {
+    background-color: var(--plum);
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* Section wrapper */
+  .section-wrap {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  /* Wavy SVG divider placeholder — insert SVGs inline in components */
+  .divider-wave {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  /* Floating background blobs */
+  .bg-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(60px);
+    opacity: 0.35;
+    animation: drift-slow 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+/* ── Utility Animations ──────────────────────────────────────────────────── */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.6s ease-out forwards;
+  }
+
+  .animate-drift-slow {
+    animation: drift-slow 8s ease-in-out infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 0.5s ease-in-out infinite;
+  }
+}
+
+/* ── Keyframes ───────────────────────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes drift-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(15px, -10px) scale(1.02); }
+  66%       { transform: translate(-10px, 8px) scale(0.98); }
+}
+
+@keyframes fade-up {
+  0%   { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50%       { transform: rotate(3deg); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+/* ── Scrollbar hide utility ──────────────────────────────────────────────────── */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── Skip to content (accessibility) ────────────────────────────────────────── */
+.skip-nav {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  background: var(--plum);
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 9999;
+  transition: top 0.15s ease;
+  text-decoration: none;
+}
+.skip-nav:focus {
+  top: 1rem;
+  outline: 3px solid var(--coral);
+  outline-offset: 2px;
+}
+
+/* ── Text selection color ────────────────────────────────────────────────────── */
+::selection {
+  background-color: var(--coral);
+  color: white;
+}
+
+/* ── Mobile 44px touch targets ───────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  button, a[href], [role="button"] {
+    min-height: 44px;
   }
 }
