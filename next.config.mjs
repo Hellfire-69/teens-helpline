@@ -1,7 +1,17 @@
+import createMDX from '@next/mdx';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Required for Framer Motion v12 in Next.js 14 App Router
-  transpilePackages: ["framer-motion"],
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  // Add any other next config options here
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+  // Add markdown plugins here, as desired
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+});
+
+export default withMDX(nextConfig);
