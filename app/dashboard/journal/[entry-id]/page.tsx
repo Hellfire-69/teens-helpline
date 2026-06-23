@@ -1,8 +1,15 @@
-export default function JournalEntryPage() {
+import React from 'react';
+import { JournalEditor } from '@/components/journal/JournalEditor';
+import { PageContainer } from '@/components/layout/PageContainer';
+
+export const metadata = {
+  title: 'Reflection | Teens Helpline',
+};
+
+export default function JournalEntryPage({ params }: { params: { 'entry-id': string } }) {
   return (
-    <div className="p-8">
-      <h1>Journal Entry</h1>
-      <p>Placeholder content for individual journal entry.</p>
-    </div>
+    <PageContainer>
+      <JournalEditor entryId={params['entry-id']} />
+    </PageContainer>
   );
 }

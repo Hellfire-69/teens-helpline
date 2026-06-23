@@ -7,13 +7,55 @@ import { H3, P } from '@/components/ui/Typography';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useSettingsStore } from '@/stores/settings-store';
-import { Download, Upload, Key, ShieldAlert } from 'lucide-react';
+import { useIdentityStore } from '@/stores/identity-store';
+import { useMoodStore } from '@/stores/mood-store';
+import { useJournalStore } from '@/stores/journal-store';
+import { Download, ShieldAlert } from 'lucide-react';
 
 export default function SettingsPage() {
   const { theme, setTheme } = useSettingsStore();
   const [motionEnabled, setMotionEnabled] = useState(true);
   const [notifications, setNotifications] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const { spaceId, clearSpace } = useIdentityStore();
+  const { moods } = useMoodStore();
+  const { entries } = useJournalStore();
+
+  const handleExport = () => {
+    const data = { moods, journals: entries };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `teens_helpline_export_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDeleteSpace = async () => {
+    if (!spaceId) return;
+    
+    try {
+      const res = await fetch('/api/space/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ spaceId })
+      });
+      
+      if (!res.ok) {
+        throw new Error('Failed to delete space data');
+      }
+
+      clearSpace();
+      window.location.href = '/dashboard';
+    } catch (e) {
+      console.error(e);
+      alert('There was a problem deleting your space. Please try again.');
+    }
+  };
 
   return (
     <PageContainer>
@@ -88,7 +130,7 @@ export default function SettingsPage() {
           {/* Data Management */}
           <section className="space-y-6">
             <H3>Data Management</H3>
-            <Card className="space-y-6 opacity-60 pointer-events-none">
+            <Card className="space-y-6">
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -98,33 +140,7 @@ export default function SettingsPage() {
                     <P className="text-sm text-text-muted">Download your entries as JSON.</P>
                   </div>
                 </div>
-                <span className="text-xs font-semibold px-2 py-1 bg-black/5 rounded text-text-muted">COMING SOON</span>
-              </div>
-
-              <div className="h-px bg-black/5" />
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-black/5 rounded-lg"><Upload className="h-5 w-5 text-text-muted" /></div>
-                  <div>
-                    <P className="font-medium">Import Data</P>
-                    <P className="text-sm text-text-muted">Restore a previous backup.</P>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold px-2 py-1 bg-black/5 rounded text-text-muted">COMING SOON</span>
-              </div>
-
-              <div className="h-px bg-black/5" />
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-black/5 rounded-lg"><Key className="h-5 w-5 text-text-muted" /></div>
-                  <div>
-                    <P className="font-medium">Recovery Keys</P>
-                    <P className="text-sm text-text-muted">Secure your anonymous space.</P>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold px-2 py-1 bg-black/5 rounded text-text-muted">COMING SOON</span>
+                <Button variant="outline" size="sm" onClick={handleExport}>Download</Button>
               </div>
 
             </Card>
@@ -137,7 +153,7 @@ export default function SettingsPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>
                   <P className="font-medium text-red-900">Delete Space</P>
-                  <P className="text-sm text-red-700/80">Permanently delete all your moods, journals, and Nova conversations.</P>
+                  <P className="text-sm text-red-700/80">Permanently disconnect from this space. Your data will be orphaned and unrecoverable.</P>
                 </div>
                 
                 {!showDeleteConfirm ? (
@@ -159,7 +175,7 @@ export default function SettingsPage() {
                     </Button>
                     <Button 
                       className="bg-red-600 hover:bg-red-700 text-white flex-1 sm:flex-none"
-                      onClick={() => alert("Space deletion would happen here.")}
+                      onClick={handleDeleteSpace}
                     >
                       Confirm
                     </Button>
