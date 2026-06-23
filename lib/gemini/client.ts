@@ -5,6 +5,6 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 export const geminiClient = {
   getModel() {
-    return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    return genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
   }
 };

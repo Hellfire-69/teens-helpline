@@ -89,6 +89,7 @@ export const useNovaStore = create<NovaState>((set, get) => ({
       const modelMessage = await novaService.createMessage(conversation.id, 'model', text);
       set({ messages: [...get().messages, modelMessage], isTyping: false });
     } catch (error: unknown) {
+      console.error("Nova sendMessage error:", error);
       const msg = error instanceof Error ? error.message : 'Failed to send message';
       set({ error: msg, isTyping: false });
     }
