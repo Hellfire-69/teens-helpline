@@ -4,30 +4,92 @@
 
 @layer base {
   :root {
-    --background: #F8F5F0;
-    --surface: #FFFFFF;
+    /* Foundation — the page itself */
+    --bg-base:        #F5F2EE;   /* Warm ivory */
+    --bg-surface:     #FFFFFF;   /* Card surfaces */
+    --bg-elevated:    #EDE9E3;   /* Hover states */
+    --bg-inverse:     #1C2B2B;   /* Dark sections */
+
+    /* Primary — Deep Teal */
+    --teal-900:       #0D2626;
+    --teal-700:       #1A4040;
+    --teal-500:       #2D6A6A;   
+    --teal-300:       #5B9E9E;   
+    --teal-100:       #C8E0E0;   
+    --teal-50:        #EBF4F4;   
+
+    /* Secondary — Sage Green */
+    --sage-500:       #6B9E7A;
+    --sage-300:       #9EC4A8;
+    --sage-100:       #D4EBD9;
+    --sage-50:        #EEF7F0;
+
+    /* Warm Sand */
+    --sand-500:       #C4956A;
+    --sand-300:       #D9B898;
+    --sand-100:       #F0E0CE;
+    --sand-50:        #FAF3EC;
+
+    /* Text */
+    --text-primary:   #1A1A1A;   
+    --text-body:      #2C2C2C;   
+    --text-muted:     #6B7280;   
+    --text-placeholder: #9CA3AF;
+    --text-inverse:   #F5F2EE;   
+
+    /* Signal */
+    --signal-crisis:  #C0392B;   
+    --signal-warning: #D97706;   
+    --signal-success: var(--sage-500);
+
+    /* Radius */
+    --radius-sm:   6px;
+    --radius-md:   12px;
+    --radius-lg:   16px;
+    --radius-xl:   24px;
+    --radius-2xl:  32px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm:  0 1px 3px 0 rgba(45, 106, 106, 0.08);
+    --shadow-md:  0 4px 16px 0 rgba(45, 106, 106, 0.10);
+    --shadow-lg:  0 8px 32px 0 rgba(45, 106, 106, 0.12);
+    --shadow-card: 0 2px 12px 0 rgba(28, 43, 43, 0.08);
+
+    /* Shadcn Overrides to match Dashboard existing variables */
+    --background: 245 242 238;    /* --bg-base */
+    --foreground: 26 26 26;       /* --text-primary */
+    --card: 255 255 255;          /* --bg-surface */
+    --border: 237 233 227;        /* --bg-elevated */
+    --primary: 45 106 106;         /* --teal-500 */
+    --primary-foreground: 245 242 238;
+    --radius: 0.75rem;            /* --radius-md */
+  }
+
+  .dark {
+    /* Not actively supporting dark mode for the landing page per design spec, 
+       but mapping for dashboard fallback */
+    --bg-base:        #1A1A1A;
+    --bg-surface:     #242424;
+    --bg-elevated:    #333333;
+    --bg-inverse:     #F5F2EE;
     
-    --primary: #1F5F5F;
-    --secondary: #7DAE8F;
-    --accent: #C4956A;
+    --text-primary:   #EAEAEA;
+    --text-body:      #D1D1D1;
+    --text-muted:     #A0A0A0;
+    --text-inverse:   #1A1A1A;
     
-    --text-primary: #2C2C2C;
-    --text-heading: #1A1A1A;
-    --text-muted: #6A6A6A;
-    
-    --mood-calm: #7DAE8F;
-    --mood-happy: #C4956A;
-    --mood-neutral: #B8B8B8;
-    --mood-anxious: #D9B44A;
-    --mood-sad: #6B8CA3;
-    --mood-overwhelmed: #8A7A9F;
+    --background: 26 26 26;
+    --foreground: 234 234 234;
+    --card: 36 36 36;
+    --border: 51 51 51;
   }
 
   body {
-    @apply bg-background text-text-primary font-body antialiased;
+    @apply bg-[var(--bg-base)] text-[var(--text-body)] font-body antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading text-text-heading font-semibold tracking-tight;
+    @apply font-heading text-[var(--text-primary)] font-normal tracking-tight;
   }
 }

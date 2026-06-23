@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Phone, Heart } from "lucide-react";
+import { NovaGlyph } from "@/components/nova/NovaGlyph";
 
 const helplines = [
   {
@@ -7,92 +7,86 @@ const helplines = [
     number: "9152987821",
     tel: "9152987821",
     desc: "Mon–Sat, 8am–10pm",
-    color: "bg-coral/10 text-coral-dark border-coral/20",
   },
   {
-    name: "Vandrevala Foundation",
+    name: "Vandrevala",
     number: "1860-2662-345",
     tel: "18602662345",
-    desc: "24 hours, 7 days",
-    color: "bg-mint/40 text-plum border-mint",
+    desc: "24/7",
   },
+  {
+    name: "Emergency",
+    number: "112",
+    tel: "112",
+    desc: "Immediate Danger",
+  }
 ];
 
 const footerLinks = [
-  { href: "/",                   label: "Home" },
-  { href: "/whats-this-feeling", label: "What's This Feeling?" },
-  { href: "/help-yourself",      label: "Help Yourself" },
-  { href: "/talk-to-boo",        label: "Talk to Boo" },
-  { href: "/real-help",          label: "Real Help" },
+  { href: "/", label: "Home" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/real-help", label: "Real Help" },
+  { href: "/privacy", label: "Privacy" },
 ];
 
 export default function Footer() {
   return (
-    <footer className="bg-plum text-white mt-auto" role="contentinfo">
-      {/* Crisis numbers — prominent, always visible */}
-      <div className="bg-plum-dark py-8 px-4">
-        <div className="section-wrap">
-          <div className="flex items-center gap-2 mb-5 justify-center">
-            <Phone size={18} className="text-coral" />
-            <p className="font-heading text-lg text-white/90" style={{ fontFamily: "var(--font-fredoka)" }}>
-              Need to talk to someone real?
-            </p>
-          </div>
+    <footer className="bg-[var(--teal-900)] text-[var(--text-inverse)] mt-auto" role="contentinfo">
+      {/* Row 1 - Crisis numbers */}
+      <div className="py-16 px-4 border-b border-[var(--teal-700)]">
+        <div className="max-w-[1200px] mx-auto">
+          <p className="font-heading text-2xl text-center mb-8">
+            Need to talk to someone real?
+          </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16">
             {helplines.map((line) => (
               <a
                 key={line.name}
                 href={`tel:${line.tel}`}
                 aria-label={`Call ${line.name} at ${line.number}`}
-                className="flex flex-col items-center gap-1 bg-white/10 hover:bg-white/20 rounded-2xl p-4 transition-colors duration-200 text-center border border-white/10"
+                className="flex flex-col items-center gap-1 group"
               >
-                <span className="text-white/60 text-xs font-body font-medium uppercase tracking-wider">
+                <span className="text-[var(--teal-100)] text-[12px] font-body uppercase tracking-wider">
                   {line.name}
                 </span>
-                <span className="text-white font-heading text-2xl tracking-tight" style={{ fontFamily: "var(--font-fredoka)" }}>
+                <span className="text-[var(--teal-300)] font-heading text-3xl group-hover:text-white transition-colors">
                   {line.number}
                 </span>
-                <span className="text-white/50 text-xs font-body">
+                <span className="text-[var(--teal-100)] text-[14px] font-body opacity-70">
                   {line.desc}
                 </span>
               </a>
             ))}
           </div>
-
-          <p className="text-center text-white/40 text-xs mt-4 font-body">
-            If it&apos;s an emergency, call <strong className="text-white/70">112</strong>
-          </p>
         </div>
       </div>
 
-      {/* Footer links + brand */}
-      <div className="py-8 px-4 border-t border-white/10">
-        <div className="section-wrap flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Brand */}
-          <div className="flex flex-col items-center md:items-start gap-1">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">🫧</span>
-              <span
-                className="font-heading text-lg text-white/90"
-                style={{ fontFamily: "var(--font-fredoka)" }}
-              >
+      {/* Row 2 - Standard footer */}
+      <div className="py-12 px-4">
+        <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+          
+          {/* Logo & Tagline */}
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <Link href="/" className="flex items-center gap-2 group">
+              <NovaGlyph size={20} state="resting" />
+              <span className="font-body font-medium text-white">
                 Teens Helpline
               </span>
-            </div>
-            <p className="text-white/40 text-xs font-body text-center md:text-left max-w-xs">
-              A safe space for teens. No judgment. No data collected. Just help.
+            </Link>
+            <p className="text-[var(--teal-100)] text-[14px] font-body opacity-70">
+              A private space for teens.
             </p>
           </div>
 
           {/* Nav links */}
           <nav aria-label="Footer navigation">
-            <ul className="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2" role="list">
+            <ul className="flex flex-wrap justify-center gap-x-8 gap-y-4" role="list">
               {footerLinks.map(({ href, label }) => (
                 <li key={href}>
                   <Link
                     href={href}
-                    className="text-white/50 hover:text-white text-sm font-body transition-colors duration-150"
+                    className="text-[var(--teal-100)] opacity-70 hover:opacity-100 hover:text-white text-[14px] font-body transition-all"
                   >
                     {label}
                   </Link>
@@ -100,16 +94,12 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
-        </div>
 
-        {/* Bottom line */}
-        <div className="section-wrap mt-6 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-white/30 text-xs font-body flex items-center gap-1">
-            Made with <Heart size={11} className="text-coral fill-coral" /> for real teens
-          </p>
-          <p className="text-white/30 text-xs font-body">
-            Always remember — you matter. 🫧
-          </p>
+          {/* Attribution */}
+          <div className="text-[var(--teal-100)] text-[12px] font-body opacity-70">
+            Made for real teens.
+          </div>
+
         </div>
       </div>
     </footer>

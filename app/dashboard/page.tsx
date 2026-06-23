@@ -28,21 +28,23 @@ export default function DashboardHomePage() {
         <div className="lg:col-span-8 space-y-16">
           
           {/* Nova Entry Point (Secondary Action) */}
-          <Card className="bg-primary/5 border-none shadow-none relative overflow-hidden group hover:bg-primary/10 transition-colors cursor-pointer">
-            <div className="absolute -right-12 -top-12 w-48 h-48 bg-secondary/20 rounded-full blur-3xl group-hover:bg-secondary/30 transition-colors" />
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div>
-                <div className="flex items-center gap-2 mb-2 text-primary">
-                  <Sparkles className="h-5 w-5" />
-                  <H3>Reflect with Nova</H3>
+          <Link href="/dashboard/nova" className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-2xl">
+            <Card className="bg-primary/5 border-none shadow-none relative overflow-hidden group hover:bg-primary/10 transition-colors cursor-pointer">
+              <div className="absolute -right-12 -top-12 w-48 h-48 bg-secondary/20 rounded-full blur-3xl group-hover:bg-secondary/30 transition-colors" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-2 text-primary">
+                    <Sparkles className="h-5 w-5" />
+                    <H3>Reflect with Nova</H3>
+                  </div>
+                  <P className="text-text-muted max-w-md">I noticed you logged &apos;Anxious&apos; earlier today. Would it help to map out what&apos;s on your plate right now?</P>
                 </div>
-                <P className="text-text-muted max-w-md">I noticed you logged &apos;Anxious&apos; earlier today. Would it help to map out what&apos;s on your plate right now?</P>
+                <Button variant="outline" className="w-full md:w-auto bg-surface" tabIndex={-1}>
+                  Start Conversation
+                </Button>
               </div>
-              <Button variant="outline" className="w-full md:w-auto bg-surface">
-                Start Conversation
-              </Button>
-            </div>
-          </Card>
+            </Card>
+          </Link>
 
           {/* Recent Journal Entries (Editorial List) */}
           <DashboardRecentJournals />

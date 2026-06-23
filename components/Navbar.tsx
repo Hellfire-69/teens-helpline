@@ -2,149 +2,143 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { NovaGlyph } from "@/components/nova/NovaGlyph";
+import { CrisisStrip } from "./layout/CrisisStrip";
 
 const navLinks = [
-  { href: "/",                  label: "Home" },
-  { href: "/whats-this-feeling", label: "What's This Feeling?" },
-  { href: "/help-yourself",      label: "Help Yourself" },
-  { href: "/talk-to-boo",        label: "Talk to Boo 👻" },
-  { href: "/real-help",          label: "Real Help" },
+  { href: "/", label: "Home" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/real-help", label: "Real Help" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full">
-      {/* Skip to content — keyboard accessibility */}
-      <a href="#main-content" className="skip-nav">
-        Skip to main content
-      </a>
-
-      {/* Crisis banner — always on top */}
-      <div className="bg-coral text-white text-center py-1.5 px-4 text-sm font-body font-medium">
-        Need help now? Call iCall:{" "}
-        <a
-          href="tel:9152987821"
-          className="font-bold underline underline-offset-2 hover:no-underline"
-        >
-          9152987821
-        </a>
-        {" "}· Vandrevala:{" "}
-        <a
-          href="tel:1-800-950-NAMI"
-          className="font-bold underline underline-offset-2 hover:no-underline"
-        >
-          1-800-950-NAMI
-        </a>
-      </div>
-
+    <header className="sticky top-0 z-50 w-full flex flex-col">
+      <CrisisStrip />
+      
       {/* Main nav bar */}
       <nav
-        className="bg-offwhite/90 backdrop-blur-md border-b border-plum/10"
+        className={`w-full transition-all duration-300 ${
+          scrolled || menuOpen ? "bg-[var(--bg-base)] border-b border-[var(--bg-elevated)]" : "bg-transparent border-b border-transparent"
+        }`}
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="section-wrap flex items-center justify-between h-16">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link
             href="/"
             className="flex items-center gap-2 group"
             aria-label="Teens Helpline — Home"
           >
-            <span className="text-2xl group-hover:animate-wiggle inline-block transition-transform">
-              🫧
-            </span>
-            <span
-              className="font-heading text-xl text-plum leading-none"
-              style={{ fontFamily: "var(--font-fredoka)" }}
-            >
+            <NovaGlyph size={24} state="resting" />
+            <span className="font-body font-medium text-[var(--text-primary)]">
               Teens Helpline
             </span>
           </Link>
 
           {/* Desktop links */}
-          <ul className="hidden md:flex items-center gap-1" role="list">
+          <ul className="hidden md:flex items-center gap-8" role="list">
             {navLinks.map(({ href, label }) => {
-              const isActive = pathname === href;
+              const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
+              
               return (
                 <li key={href}>
                   <Link
                     href={href}
                     className={`
-                      relative px-3 py-2 rounded-full text-sm font-body font-medium
-                      transition-all duration-200
-                      ${
-                        isActive
-                          ? "bg-plum text-white"
-                          : "text-plum hover:bg-plum/10"
-                      }
+                      text-[14px] font-body font-medium transition-colors duration-200
+                      ${isActive ? "text-[var(--teal-700)]" : "text-[var(--text-muted)] hover:text-[var(--teal-500)]"}
                     `}
                     aria-current={isActive ? "page" : undefined}
                   >
                     {label}
-                    {isActive && (
-                      <span className="absolute inset-0 rounded-full ring-2 ring-plum/30 ring-offset-1" />
-                    )}
                   </Link>
                 </li>
               );
             })}
           </ul>
 
+          {/* CTA Desktop */}
+          <div className="hidden md:block">
+            <Link
+              href="/dashboard"
+              className="px-6 py-2.5 rounded-full text-[14px] font-body font-medium bg-[var(--teal-500)] text-white hover:bg-[var(--teal-300)] transition-colors duration-200 shadow-sm"
+            >
+              Open my space
+            </Link>
+          </div>
+
           {/* Mobile hamburger */}
           <button
             id="mobile-menu-toggle"
-            className="md:hidden p-2 rounded-full hover:bg-plum/10 text-plum transition-colors"
+            className="md:hidden p-2 rounded-full hover:bg-[var(--bg-elevated)] text-[var(--text-primary)] transition-colors"
             onClick={() => setMenuOpen((o) => !o)}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Mobile dropdown menu */}
+        {/* Full-screen mobile overlay menu */}
         <div
           id="mobile-menu"
           className={`
-            md:hidden overflow-hidden transition-all duration-300 ease-in-out
-            ${menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+            md:hidden absolute top-[100%] left-0 w-full h-[calc(100vh-100px)] bg-[var(--bg-base)]
+            transition-all duration-300 ease-in-out border-t border-[var(--bg-elevated)]
+            ${menuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}
           `}
           aria-hidden={!menuOpen}
         >
-          <ul
-            className="flex flex-col gap-1 px-4 pb-4 pt-2 border-t border-plum/10"
-            role="list"
-          >
-            {navLinks.map(({ href, label }) => {
-              const isActive = pathname === href;
-              return (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    onClick={() => setMenuOpen(false)}
-                    className={`
-                      block px-4 py-3 rounded-2xl text-sm font-body font-medium
-                      transition-colors duration-150
-                      ${
-                        isActive
-                          ? "bg-plum text-white"
-                          : "text-plum hover:bg-plum/10"
-                      }
-                    `}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="flex flex-col h-full px-6 py-8">
+            <ul className="flex flex-col gap-6" role="list">
+              {navLinks.map(({ href, label }) => {
+                const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
+                return (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`
+                        block text-2xl font-heading
+                        transition-colors duration-150
+                        ${isActive ? "text-[var(--teal-700)]" : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"}
+                      `}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+            
+            <div className="mt-auto pb-12">
+              <Link
+                href="/dashboard"
+                onClick={() => setMenuOpen(false)}
+                className="w-full flex items-center justify-center px-6 py-4 rounded-full text-[16px] font-body font-medium bg-[var(--teal-500)] text-white"
+              >
+                Open my space
+              </Link>
+            </div>
+          </div>
         </div>
       </nav>
     </header>
